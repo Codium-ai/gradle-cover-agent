@@ -18,11 +18,15 @@ repositories {
     mavenCentral()
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 spotbugs {
-    toolVersion = '4.7.2'
     effort = Effort.LESS
     reportLevel = Confidence.valueOf('HIGH')
-
 }
 
 dependencies {
@@ -34,7 +38,6 @@ dependencies {
     implementation 'org.tinylog:slf4j-tinylog:2.6.2'
 
     testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
-    //implementation 'org.jacoco:org.jacoco.cli:0.8.12'
 }
 
 gradlePlugin {
@@ -59,4 +62,71 @@ test {
         excludes = ['sun/util/resources/cldr/provider/CLDRLocaleDataMetaInfo']
     }
 }
-apply from: "${projectDir}/gradle/static-analysis.gradle"
+
+test {
+    ignoreFailures = false
+}
+
+checkstyle {
+    toolVersion '8.36.1'
+}
+
+checkstyleMain {
+    ignoreFailures = false
+}
+
+checkstyleTest {
+    ignoreFailures = true
+}
+
+
+
+pmdMain {
+    ignoreFailures = false
+    ruleSets = []
+    ruleSetFiles = files("${project.projectDir}/config/pmd/pmd-ruleset.xml")
+    excludes = ['BeanMembersShouldSerialize', 'LoosePackageCoupling']
+}
+
+pmdTest {
+    ignoreFailures = true
+    ruleSets = []
+    ruleSetFiles = files("${project.projectDir}/config/pmd/pmd-ruleset.xml")
+    excludes = ['BeanMembersShouldSerialize', 'LoosePackageCoupling']
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            excludes = [
+                    'ai.codium.cover.plugin.CoverAgentPlugin',
+                    'ai.codium.cover.plugin.CoverAgentTask',
+                    'sun.util.resources.cldr.provider.CLDRLocaleDataMetaInfo'
+            ]
+            element = 'CLASS'
+            limit {
+                counter = 'INSTRUCTION'
+                value = 'COVEREDRATIO'
+                minimum = new Double(classCoverage)
+            }
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = new Double(branchCoverage)
+            }
+        }
+    }
+}
+spotbugsMain {
+    ignoreFailures = false
+    dependsOn compileJava
+}
+
+spotbugsTest {
+    ignoreFailures = true
+}
+
+
+check.finalizedBy jacocoTestReport, jacocoTestCoverageVerification
+
+

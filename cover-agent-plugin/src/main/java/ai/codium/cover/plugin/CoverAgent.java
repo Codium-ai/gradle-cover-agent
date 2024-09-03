@@ -43,7 +43,7 @@ public class CoverAgent {
     private Optional<String> javaClassDir = Optional.empty();
     private String buildDirectory;
     private CoverAgentExecutor coverAgentExecutor;
-
+    private  OpenAiChatModel.OpenAiChatModelBuilder openAiChatModelBuilder;
     public CoverAgent(CoverAgentBuilder builder) {
         this.apiKey = builder.getApiKey();
         this.wanDBApiKey = builder.getWanDBApiKey();
@@ -59,7 +59,8 @@ public class CoverAgent {
         this.coverAgentExecutor = builder.getCoverAgentExecutor();
         this.project = builder.getProject();
         this.logger = project.getLogger();
-    }
+        this.openAiChatModelBuilder = builder.openAiChatModelBuilder();
+   }
 
     public void init() {
         initModelPrompter();
@@ -106,12 +107,12 @@ public class CoverAgent {
     }
 
     private void initExecutor() {
-        coverAgentExecutor = new CoverAgentExecutor.Builder().coverAgentBinaryPath(coverAgentBinaryPath).apiKey(apiKey)
-                .wanDBApiKey(wanDBApiKey).coverage(coverage).iterations(iterations).build();
+        coverAgentExecutor = new CoverAgentExecutor.Builder().coverAgentBinaryPath(coverAgentBinaryPath)
+                .apiKey(apiKey).wanDBApiKey(wanDBApiKey).coverage(coverage).iterations(iterations).build();
     }
 
     private void initModelPrompter() {
-        ChatLanguageModel model = OpenAiChatModel.builder().apiKey(this.apiKey).modelName(GPT_4_O)
+        ChatLanguageModel model = openAiChatModelBuilder.apiKey(this.apiKey).modelName(GPT_4_O)
                 .maxTokens(MAX_TOKENS).build();
         this.modelPrompter = new ModelPrompter(logger, model);
     }
@@ -152,18 +153,24 @@ public class CoverAgent {
         return String.join(PATH_SEPARATOR, list);
     }
 
-    private List<String> findNeededJars(String mavenDependencyPath) {
-        Configuration configuration = project.getConfigurations().detachedConfiguration(project.getDependencies()
-                .create(mavenDependencyPath));
-        Set<File> files = configuration.resolve();
-        List<String> jarPaths = files.stream().map(File::getAbsolutePath).collect(Collectors.toList());
-        for (String jarPath : jarPaths) {
-            logger.debug("Found jar path {}", jarPath);
+    private List<String> findNeededJars(String mavenDependencyPath) throws CoverError {
+        List<String> jarPaths = new ArrayList<>();
+        try {
+            Configuration configuration = project.getConfigurations().detachedConfiguration(project.getDependencies()
+                    .create(mavenDependencyPath));
+            Set<File> files = configuration.resolve();
+            jarPaths.addAll(files.stream().map(File::getAbsolutePath).collect(Collectors.toList()));
+            for (String jarPath : jarPaths) {
+                logger.debug("Found jar path {}", jarPath);
+            }
+        } catch (Exception e) {
+            logger.error("Failed to find needed jars {}", mavenDependencyPath, e);
+            throw new CoverError("Failed to find " + mavenDependencyPath, e);
         }
         return jarPaths;
     }
 
-    private String jacocoJavaReport(String reportPath, String execPath) {
+    private String jacocoJavaReport(String reportPath, String execPath) throws  CoverError {
         List<String> jars = findNeededJars("org.jacoco:org.jacoco.cli:0.8.12");
         String jarPath = convertListToString(jars);
         String sourcePath = convertListToString(javaSourceDir);
@@ -171,7 +178,7 @@ public class CoverAgent {
                 + javaClassDir.get() + " --sourcefiles " + sourcePath + " --csv " + reportPath;
     }
 
-    private String javaAgentCommand(String jacocExecPath) {
+    private String javaAgentCommand(String jacocExecPath) throws CoverError {
         String standAloneJunit =
                 findNeededJars("org.junit.platform:junit-platform-console-standalone:1.11.0").get(0);
         String jacocoAgent = findNeededJars("org.jacoco:org.jacoco.agent:0.8.11:runtime").get(0);
@@ -194,8 +201,8 @@ public class CoverAgent {
             for (String arg : javaCompileTask.getOptions().getAllCompilerArgs()) {
                 builder.append(arg).append(" ");
             }
-            builder.append("-d ").append(javaCompileTask.getDestinationDirectory().get().getAsFile().getAbsolutePath())
-                    .append(" ");
+            builder.append("-d ").append(javaCompileTask.getDestinationDirectory().get().getAsFile()
+                    .getAbsolutePath()).append(" ");
             builder.append("-classpath ");
             builder.append(javaClassPath.get());
             builder.append(" ");
@@ -215,29 +222,31 @@ public class CoverAgent {
         String jacocoExecPath = buildDirectory + "/test.exec";
         String javaCompileCommand = javaCompileCommand();
         String testCompileCommand = testJavaCompileCommand();
-        String javaAgentCommand = javaAgentCommand(jacocoExecPath);
-        String jacocoJavaReportCommand = jacocoJavaReport(jacocoReportPath, jacocoExecPath);
+        try {
+            String javaAgentCommand = javaAgentCommand(jacocoExecPath);
+            String jacocoJavaReportCommand = jacocoJavaReport(jacocoReportPath, jacocoExecPath);
 
-        for (File pickedTestFile : javaTestSourceFiles) {
-            logger.debug("First file to start adding coverage to is {}", pickedTestFile);
-            try {
-                deleteFileIfExists(jacocoReportPath);
-                deleteFileIfExists(jacocoExecPath);
-                TestInfoResponse testInfoResponse = modelPrompter.chatter(javaSourceFiles, pickedTestFile);
-                String sourceFile = testInfoResponse.filepath();
-                String testFile = pickedTestFile.getAbsolutePath();
-                String success = coverAgentExecutor.execute(this.project, sourceFile, testFile, jacocoReportPath,
-                        String.format("%s;%s;%s;%s", javaCompileCommand, testCompileCommand, javaAgentCommand,
-                                jacocoJavaReportCommand), projectPath);
-                logger.debug("Success output from cover-agent: {}", success);
-            } catch (CoverError e) {
-                logger.error("Failed to find a matching Source file from list {} for test file {}, "
-                        + "moving on to other Test files in project.", javaSourceFiles, pickedTestFile, e);
+            for (File pickedTestFile : javaTestSourceFiles) {
+                logger.debug("First file to start adding coverage to is {}", pickedTestFile);
+                try {
+                    deleteFileIfExists(jacocoReportPath);
+                    deleteFileIfExists(jacocoExecPath);
+                    TestInfoResponse testInfoResponse = modelPrompter.chatter(javaSourceFiles, pickedTestFile);
+                    String sourceFile = testInfoResponse.filepath();
+                    String testFile = pickedTestFile.getAbsolutePath();
+                    String success = coverAgentExecutor.execute(this.project, sourceFile, testFile, jacocoReportPath,
+                            String.format("%s;%s;%s;%s", javaCompileCommand, testCompileCommand,
+                                    javaAgentCommand, jacocoJavaReportCommand), projectPath);
+                    logger.debug("Success output from cover-agent: {}", success);
+                } catch (CoverError e) {
+                    logger.error("Failed to find a matching Source file from list {} for test file {}, "
+                            + "moving on to other Test files in project.", javaSourceFiles, pickedTestFile, e);
+                }
             }
+        } catch (CoverError e) {
+            logger.error("Failed to run coverAgent look a log file for more info ", e);
         }
     }
-
-
     private String testJavaCompileCommand() {
         JavaCompile javaCompileTask = project.getTasks().withType(JavaCompile.class).findByName("compileTestJava");
         StringBuilder builder = new StringBuilder();

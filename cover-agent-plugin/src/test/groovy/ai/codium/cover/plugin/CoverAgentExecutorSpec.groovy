@@ -1,7 +1,9 @@
 package ai.codium.cover.plugin
 
+import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.process.ExecResult
+import org.gradle.process.ExecSpec
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.TempDir
@@ -51,7 +53,7 @@ class CoverAgentExecutorSpec extends Specification {
         result != null
     }
 
-    def "A Failure from the executor"() {
+    def "A Failure from the executor mocked "() {
         given:
         Project project = Mock(Project)
         ExecResult execResult = Mock(ExecResult)
@@ -71,6 +73,38 @@ class CoverAgentExecutorSpec extends Specification {
         1 * project.exec(_) >> execResult
         1 * execResult.getExitValue() >> 1
         thrown(CoverError)
+    }
+
+    def "Call with ExecSpec to function"() {
+        given:
+        Project project = Mock(Project)
+        ExecResult execResult = Mock(ExecResult)
+        ExecSpec spec = Mock(ExecSpec)
+        CoverAgentExecutor executor = new CoverAgentExecutor.Builder()
+                .coverAgentBinaryPath(mockCoverAgentFile.absolutePath)
+                .wanDBApiKey(wandbkey)
+                .apiKey(apiKey)
+                .coverage(1)
+                .iterations(2)
+                .build()
+
+        when:
+        Action<ExecSpec> action = executor.getExecSpecAction("sourceFile", "testFile", "jacocoReportPath",
+                "commandString", "projectPath")
+        action.execute(spec)
+
+        then:
+        wanCall * spec.environment(CoverAgentExecutor.WANDB_API_KEY, wandbkey)
+        apiCall * spec.environment(CoverAgentExecutor.OPENAI_API_KEY, apiKey)
+        1 * spec.setWorkingDir("projectPath")
+
+        where:
+        apiKey       | wandbkey   | wanCall | apiCall
+        "api"        | null       | 0       | 1
+        null         | "wandbkey" | 1       | 0
+        "anotherkey" | ""         | 0       | 1
+
+
     }
 
 }

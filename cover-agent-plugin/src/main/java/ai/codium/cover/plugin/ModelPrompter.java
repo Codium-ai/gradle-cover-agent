@@ -45,7 +45,7 @@ public class ModelPrompter {
         this.model = model;
     }
 
-    private static String extractJson(String text) {
+    private String extractJson(String text) {
         if (text != null) {
             return text.substring(text.indexOf('{'), text.indexOf('}') + 1);
         } else {

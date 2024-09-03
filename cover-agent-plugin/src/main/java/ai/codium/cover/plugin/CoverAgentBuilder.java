@@ -1,5 +1,6 @@
 package ai.codium.cover.plugin;
 
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import org.gradle.api.Project;
 
 import java.util.Optional;
@@ -18,6 +19,7 @@ public class CoverAgentBuilder {
     private String buildDirectory;
     private CoverAgentExecutor coverAgentExecutor;
     private Project project;
+    private OpenAiChatModel.OpenAiChatModelBuilder openAiChatModelBuilder;
 
     public static CoverAgentBuilder builder() {
         return new CoverAgentBuilder();
@@ -88,8 +90,18 @@ public class CoverAgentBuilder {
         return this;
     }
 
+    public CoverAgentBuilder openAiChatModelBuilder(OpenAiChatModel.OpenAiChatModelBuilder openAiChatModelBuilder) {
+        this.openAiChatModelBuilder = openAiChatModelBuilder;
+        return this;
+    }
+
+
     public CoverAgent build() {
         return new CoverAgent(this);
+    }
+
+    public OpenAiChatModel.OpenAiChatModelBuilder openAiChatModelBuilder() {
+        return openAiChatModelBuilder;
     }
 
     public String getApiKey() {
