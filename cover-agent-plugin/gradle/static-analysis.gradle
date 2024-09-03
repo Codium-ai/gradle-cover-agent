@@ -1,0 +1,86 @@
+
+
+test {
+    ignoreFailures = false
+}
+
+checkstyle {
+    toolVersion '8.36.1'
+}
+
+checkstyleMain {
+    ignoreFailures = false
+}
+
+checkstyleTest {
+    ignoreFailures = true
+}
+
+
+spotbugsMain {
+    ignoreFailures = false
+    classes = fileTree(dir: 'build/classes/java/main', excludes: [
+            '**/cover/CoverAgentPlugin.java',
+            '**/cover/CoverAgentTask.java'
+    ])
+    dependsOn compileJava
+}
+
+spotbugsTest {
+    ignoreFailures = true
+}
+
+pmdMain {
+    ignoreFailures = false
+    ruleSets = []
+    ruleSetFiles = files("${project.projectDir}/config/pmd/pmd-ruleset.xml")
+    excludes = ['BeanMembersShouldSerialize', 'LoosePackageCoupling']
+}
+
+pmdTest {
+    ignoreFailures = true
+    ruleSets = []
+    ruleSetFiles = files("${project.projectDir}/config/pmd/pmd-ruleset.xml")
+    excludes = ['BeanMembersShouldSerialize', 'LoosePackageCoupling']
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+jacocoTestReport {
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['ai/codium/cover/plugin/CoverAgentPlugin', 'ai/codium/cover/plugin/CoverAgentTask'])
+        }))
+    }
+    reports {
+        xml.required.set(false) // Instead of xml.enabled = false
+        html.required.set(true)  // Instead of html.enabled = true
+        html.outputLocation.set(file("${buildDir}/jacocoHtml")) // Instead of html.destination
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            excludes = [
+                    'ai.codium.cover.plugin.CoverAgentPlugin',
+                    'ai.codium.cover.plugin.CoverAgentTask',
+                    'sun/util/resources/cldr/provider/CLDRLocaleDataMetaInfo'
+            ]
+            element = 'CLASS'
+            limit {
+                counter = 'INSTRUCTION'
+                value = 'COVEREDRATIO'
+                minimum = new Double(classCoverage)
+            }
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = new Double(branchCoverage)
+            }
+        }
+    }
+}
+
+check.finalizedBy jacocoTestReport, jacocoTestCoverageVerification

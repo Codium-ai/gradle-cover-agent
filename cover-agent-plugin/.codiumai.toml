@@ -1,0 +1,38 @@
+#.codiumai.toml
+[tests]
+
+framework = "Spock"
+
+use_mocks = true
+
+num_desired_tests = 5
+
+# plan_instructions = """
+# Each line should have a comment explaining it.
+# Each comment should start with the comment number (1., 2. etc.)
+# """
+
+example_test = """
+ import spock.lang.Specification
+import spock.lang.Unroll
+
+class CalculatorSpec extends Specification {
+
+    def calculator = new Calculator()
+
+    @Unroll
+    def "should add #a and #b to get #result"() {
+        expect:
+        calculator.add(a, b) == result
+
+        where:
+        a  | b || result
+        1  | 2 || 3
+        5  | 3 || 8
+        10 | 5 || 15
+        -1 | 1 || 0
+        0  | 0 || 0
+    }
+}
+"""
+

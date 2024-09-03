@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+    id 'ai.codium.plugin.cover-agent'
+}
+
+group = 'com.davidparry'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+
+    testImplementation platform('org.junit:junit-bom:5.11.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+coverAgent {
+    apiKey = System.getenv("OPENAI_API_KEY")
+    coverAgentBinaryPath = "./mock.sh"
+    coverage = 2
+    iterations = 1
+}
+
+test {
+    useJUnitPlatform()
+}

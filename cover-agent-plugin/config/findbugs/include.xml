@@ -1,0 +1,3 @@
+<FindBugsFilter>
+    <Package name="ai.codium.cover.plugin.*"/>
+</FindBugsFilter>
