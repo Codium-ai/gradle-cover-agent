@@ -1,5 +1,6 @@
 package ai.codium.cover.plugin;
 
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
 import org.gradle.api.model.ObjectFactory;
@@ -66,9 +67,12 @@ public abstract class CoverAgentTask extends DefaultTask {
     public void performTask() {
         CoverAgentBuilder builder = CoverAgentBuilder.builder();
         builder.project(this.project);
+        OpenAiChatModel.OpenAiChatModelBuilder chatModelBuilder = OpenAiChatModel.builder();
         if (apiKey.isPresent()) {
-            getLogger().error("API Key is present");
+            getLogger().error("before API Key is present {}", apiKey.isPresent());
             builder.apiKey(apiKey.get());
+            chatModelBuilder.apiKey(apiKey.get());
+            getLogger().error("API Key is present {}", apiKey.isPresent());
         }
         if (wanDBApiKey.isPresent()) {
             builder.wanDBApiKey(wanDBApiKey.get());
@@ -82,6 +86,7 @@ public abstract class CoverAgentTask extends DefaultTask {
         if (coverage.isPresent()) {
             builder.coverage(coverage.get());
         }
+        builder.openAiChatModelBuilder(chatModelBuilder);
         coverAgent = builder.build();
         coverAgent.init();
         coverAgent.invoke();
