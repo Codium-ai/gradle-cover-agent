@@ -32,6 +32,7 @@ class CoverAgentSpec extends Specification {
     def "Not Found JavaCompileTask null "() {
         given:
         Project project = Mock(Project)
+        Logger logger = Mock(Logger)
         builder.project(project)
         CoverAgent coverAgent = builder.build()
         TaskContainer container = Mock(TaskContainer)

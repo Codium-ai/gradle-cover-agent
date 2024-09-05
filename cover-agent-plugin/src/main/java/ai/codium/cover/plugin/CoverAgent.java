@@ -66,7 +66,6 @@ public class CoverAgent {
         this.coverAgentExecutor = builder.getCoverAgentExecutor();
         this.project = builder.getProject();
         this.logger = project.getLogger();
-        logger.error("The model builder is here {}", builder.openAiChatModelBuilder());
         this.openAiChatModelBuilder = builder.openAiChatModelBuilder();
    }
 

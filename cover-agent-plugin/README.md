@@ -1,10 +1,14 @@
 
-
-Publish local repo
+# Steps to validate your changes and run locally the plugin
+- Complete code change
+```bash
+  ### build and run all acceptance criteria
+  ./gradlew clean check
 ```
-./gradlew clean publishToMavenLocal
+```bash
+  ### publish to your local repository to use in test project
+  ./gradlew clean publishToMavenLocal
 ```
-To test in a project to use the plugin
-``` 
- ./gradlew coverAgent --debug
+```bash
+  ###
 ```

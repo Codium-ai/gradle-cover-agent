@@ -17,7 +17,7 @@ dependencies {
 }
 coverAgent {
     apiKey = System.getenv("OPENAI_API_KEY")
-    coverAgentBinaryPath = "/Users/davidparry/code/github/base/cover-agent/dist/cover-agent"
+    coverAgentBinaryPath = System.getenv("COVER_AGENT")
     coverage = 25
     iterations = 3
 }

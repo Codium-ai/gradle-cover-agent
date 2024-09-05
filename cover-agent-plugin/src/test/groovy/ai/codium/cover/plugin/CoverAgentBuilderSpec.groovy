@@ -1,6 +1,7 @@
 package ai.codium.cover.plugin
 
 import org.gradle.api.Project
+import org.gradle.api.logging.Logger
 import spock.lang.Specification
 
 class CoverAgentBuilderSpec extends Specification {
@@ -9,7 +10,8 @@ class CoverAgentBuilderSpec extends Specification {
     // Builder correctly initializes all fields
     def "should initialize all fields correctly when built"() {
         given:
-        Project
+        Project project = Mock(Project)
+        Logger logger = Mock(Logger)
         def builder = new CoverAgentBuilder()
                 .apiKey("testApiKey")
                 .wanDBApiKey("testWanDBApiKey")
@@ -23,12 +25,13 @@ class CoverAgentBuilderSpec extends Specification {
                 .javaClassDir(Optional.of("/path/to/class/dir"))
                 .buildDirectory("/path/to/build")
                 .coverAgentExecutor(Mock(CoverAgentExecutor))
-                .project(Mock(Project))
+                .project(project)
 
         when:
         def coverAgent = builder.build()
 
         then:
+        1 * project.getLogger() >> logger
         coverAgent.apiKey == "testApiKey"
         coverAgent.wanDBApiKey == "testWanDBApiKey"
         coverAgent.iterations == 5
