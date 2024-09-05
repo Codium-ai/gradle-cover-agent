@@ -11,4 +11,6 @@
 ```
 ```bash
   ###
+  cd ../test-project
+  ## follow the read me to set up your environment
 ```
