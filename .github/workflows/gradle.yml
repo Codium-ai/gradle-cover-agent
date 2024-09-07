@@ -60,31 +60,3 @@ jobs:
           name: code-coverage-report
           path: build
 
-      - name: Clone Wiki Repository
-        run: |
-          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-      - name: Copy JaCoCo Report to Wiki
-        run: |
-          mkdir -p ${{ github.repository }}.wiki/JacocoCoverage
-          cp -r build/customJacocoReportDir/html/* ${{ github.repository }}.wiki/JacocoCoverage/
-
-      - name: Copy Unit Test Report to Wiki
-        run: |
-          mkdir -p ${{ github.repository }}.wiki/UnitTests
-          cp -r cover-agent-plugin/build/reports/tests/test/* ${{ github.repository }}.wiki/UnitTests/
-
-      - name: Commit and Push JaCoCo Report to Wiki
-        run: |
-          cd ${{ github.repository }}.wiki
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git config --global user.name "${{ github.actor }}"
-          git add JacocoCoverage/
-          git add UnitTests/
-          git commit -m "Updated JaCoCo/UnitTests report"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
