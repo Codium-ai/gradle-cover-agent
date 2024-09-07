@@ -1,6 +1,6 @@
 import com.github.spotbugs.snom.Effort
 import com.github.spotbugs.snom.Confidence
-
+import org.gradle.api.tasks.Delete
 plugins {
     id 'groovy'
     id 'java-gradle-plugin'
@@ -52,7 +52,7 @@ gradlePlugin {
 tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
     reports {
         html.required.set(true)
-        html.outputLocation.set(file("$buildDir/reports/spotbugs/spotbugs.html"))
+        html.outputLocation.set(file("$rootDir/build/reports/spotbugs/spotbugs.html"))
     }
 }
 
@@ -67,8 +67,10 @@ test {
     ignoreFailures = false
 }
 
+
 checkstyle {
-    toolVersion '8.36.1'
+    toolVersion = '10.0'  // Use the version you want
+    configFile = file("$rootDir/config/checkstyle/checkstyle.xml")
 }
 
 checkstyleMain {
@@ -84,14 +86,14 @@ checkstyleTest {
 pmdMain {
     ignoreFailures = false
     ruleSets = []
-    ruleSetFiles = files("${project.projectDir}/config/pmd/pmd-ruleset.xml")
+    ruleSetFiles = files("${rootDir}/config/pmd/pmd-ruleset.xml")
     excludes = ['BeanMembersShouldSerialize', 'LoosePackageCoupling']
 }
 
 pmdTest {
     ignoreFailures = true
     ruleSets = []
-    ruleSetFiles = files("${project.projectDir}/config/pmd/pmd-ruleset.xml")
+    ruleSetFiles = files("${rootDir}/config/pmd/pmd-ruleset.xml")
     excludes = ['BeanMembersShouldSerialize', 'LoosePackageCoupling']
 }
 
@@ -117,6 +119,23 @@ jacocoTestCoverageVerification {
         }
     }
 }
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required.set(true)
+        xml.outputLocation.set(file("$rootDir/build/customJacocoReportDir/jacocoTestReport.xml"))
+        csv.required.set(false)
+        html.required.set(true)
+        html.outputLocation.set(file("$rootDir/build/customJacocoReportDir/html"))
+    }
+}
+
+task cleanTopBuild(type: Delete) {
+    delete "$rootDir/build"
+}
+
+
 spotbugsMain {
     ignoreFailures = false
     dependsOn compileJava

@@ -1,3 +1,9 @@
 /cover-agent-plugin/.gradle/
 /cover-agent-plugin/.idea/
 /cover-agent-plugin/build/
+/cover-agent-plugin/.java-version
+/build/
+/.idea/
+/.gradle/
+/cover-agent-plugin/reports/
+/reports/
