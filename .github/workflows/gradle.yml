@@ -62,9 +62,10 @@ jobs:
 
       - name: Clone Wiki Repository
         run: |
-          git clone https://github.com/${{ github.repository }}.wiki.git
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
       - name: Copy JaCoCo Report to Wiki
         run: |
