@@ -51,11 +51,11 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          path: cover-agent-plugin/build/test-results/test
+          path: cover-agent-plugin/build/reports
 
       - name: Upload Code Coverage Report
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report
-          path: cover-agent-plugin/build/reports/jacoco/test/html
+          path: build
