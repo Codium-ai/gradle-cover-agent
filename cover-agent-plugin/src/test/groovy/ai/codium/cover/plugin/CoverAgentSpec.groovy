@@ -32,7 +32,6 @@ class CoverAgentSpec extends Specification {
     def "Not Found JavaCompileTask null "() {
         given:
         Project project = Mock(Project)
-        Logger logger = Mock(Logger)
         builder.project(project)
         CoverAgent coverAgent = builder.build()
         TaskContainer container = Mock(TaskContainer)
@@ -110,8 +109,8 @@ class CoverAgentSpec extends Specification {
         coverAgent.init()
 
         then:
-        _ * javaTestCompileTask.getOptions() >> javaCompileOptions
-        _ * javaCompileOptions.getAllCompilerArgs() >> [""]
+        2 * javaTestCompileTask.getOptions() >> javaCompileOptions
+        2 * javaCompileOptions.getAllCompilerArgs() >> [""]
 
         1 * aiChatModelBuilder.apiKey(_) >> aiChatModelBuilder
         1 * aiChatModelBuilder.modelName(GPT_4_O) >> aiChatModelBuilder
@@ -121,18 +120,17 @@ class CoverAgentSpec extends Specification {
         1 * logger.debug("Root Project path {}", _)
         1 * logger.debug("Build directory already exists: {}", _)
 
-        _ * project.getTasks() >> container
-        _ * container.withType(JavaCompile.class) >> collection
-        _ * collection.findByName(_) >> javaTestCompileTask
-        _ * javaTestCompileTask.getDestinationDirectory() >> directoryProperty
-        _ * directoryProperty.get() >> directory
-        _ * directory.getAsFile() >> file
-        _ * file.getAbsolutePath() >> "/apth"
-        _ * javaTestCompileTask.getClasspath() >> fileCollection
-        _ * fileCollection.getFiles() >> fileSet
-        _ * project.getLogger() >> logger
-        _ * javaTestCompileTask.getSource() >> fileTree
-        _ * fileTree.getFiles() >> fileSet
+        4 * project.getTasks() >> container
+        4 * container.withType(JavaCompile.class) >> collection
+        4 * collection.findByName(_) >> javaTestCompileTask
+        5 * javaTestCompileTask.getDestinationDirectory() >> directoryProperty
+        5 * directoryProperty.get() >> directory
+        5 * directory.getAsFile() >> file
+        5 * file.getAbsolutePath() >> "/apth"
+        2 * javaTestCompileTask.getClasspath() >> fileCollection
+        2 * fileCollection.getFiles() >> fileSet
+        4 * javaTestCompileTask.getSource() >> fileTree
+        4 * fileTree.getFiles() >> fileSet
 
         2 * project.getLayout() >> projectLayout
         1 * projectLayout.getProjectDirectory() >> projectDirectory
