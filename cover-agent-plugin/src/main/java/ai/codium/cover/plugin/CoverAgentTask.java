@@ -69,10 +69,8 @@ public abstract class CoverAgentTask extends DefaultTask {
         builder.project(this.project);
         OpenAiChatModel.OpenAiChatModelBuilder chatModelBuilder = OpenAiChatModel.builder();
         if (apiKey.isPresent()) {
-            getLogger().error("before API Key is present {}", apiKey.isPresent());
             builder.apiKey(apiKey.get());
             chatModelBuilder.apiKey(apiKey.get());
-            getLogger().error("API Key is present {}", apiKey.isPresent());
         }
         if (wanDBApiKey.isPresent()) {
             builder.wanDBApiKey(wanDBApiKey.get());
