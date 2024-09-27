@@ -8,3 +8,6 @@
 /cover-agent-plugin/reports/
 /reports/
 .codiumai
+/test-project/build/
+/test-project/run.log
+/test-project/test_results.html

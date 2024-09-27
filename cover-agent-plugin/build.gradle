@@ -1,20 +1,22 @@
 import com.github.spotbugs.snom.Effort
 import com.github.spotbugs.snom.Confidence
-import org.gradle.api.tasks.Delete
 plugins {
     id 'groovy'
     id 'java-gradle-plugin'
-    id 'maven-publish'
     id 'jacoco'
     id 'checkstyle'
     id 'pmd'
     id "com.github.spotbugs" version "6.0.21"
+    id "com.gradle.plugin-publish" version "1.3.0"
+    id 'signing'
+    id 'com.gradleup.shadow' version '8.3.2'
 }
 
 group = 'ai.codium'
 version = '1.0-SNAPSHOT'
 
 repositories {
+    gradlePluginPortal()
     mavenCentral()
 }
 
@@ -42,11 +44,22 @@ dependencies {
 
 gradlePlugin {
     plugins {
+        website = 'https://github.com/Codium-ai/gradle-cover-agent'
+        vcsUrl = 'git@github.com:Codium-ai/gradle-cover-agent.git'
         coverAgent {
             id = 'ai.codium.plugin.cover-agent'
             implementationClass = 'ai.codium.cover.plugin.CoverAgentPlugin'
+            displayName = 'Cover Agent Plugin'
+            description = 'A plugin to cover agent functionality.'
+            tags = ['cover', 'agent', 'plugin']
+
         }
     }
+}
+tasks.named('shadowJar', com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
+    archiveBaseName.set('shadow')
+    archiveClassifier.set('')
+    archiveVersion.set('')
 }
 
 tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
