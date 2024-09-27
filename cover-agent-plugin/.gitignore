@@ -2,3 +2,4 @@
 /.idea
 /build
 .codiumai
+/src/test/resources/jacocoTestReport.csv

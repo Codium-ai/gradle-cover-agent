@@ -11,3 +11,4 @@
 /test-project/build/
 /test-project/run.log
 /test-project/test_results.html
+/test-project/gradle/libs.versions.toml

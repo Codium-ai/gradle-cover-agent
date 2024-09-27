@@ -13,7 +13,7 @@ plugins {
 }
 
 group = 'ai.codium'
-version = '1.0-SNAPSHOT'
+version = '0.0.1'
 
 repositories {
     gradlePluginPortal()
@@ -45,13 +45,13 @@ dependencies {
 gradlePlugin {
     plugins {
         website = 'https://github.com/Codium-ai/gradle-cover-agent'
-        vcsUrl = 'git@github.com:Codium-ai/gradle-cover-agent.git'
+        vcsUrl = 'https://github.com/Codium-ai/gradle-cover-agent.git'
         coverAgent {
             id = 'ai.codium.plugin.cover-agent'
             implementationClass = 'ai.codium.cover.plugin.CoverAgentPlugin'
             displayName = 'Cover Agent Plugin'
             description = 'A plugin to cover agent functionality.'
-            tags = ['cover', 'agent', 'plugin']
+            tags = ['cover-agent', 'code-quality', 'unit-testing']
 
         }
     }
