@@ -1,4 +1,4 @@
-package ai.codium.cover.plugin;
+package ai.qodo.cover.plugin;
 
 import com.google.gson.Gson;
 import dev.langchain4j.data.message.AiMessage;

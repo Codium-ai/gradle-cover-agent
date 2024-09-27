@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'groovy'
-    id 'ai.codium.plugin.cover-agent' version '1.0-SNAPSHOT'
+    id 'ai.qodo.plugin.cover-agent' version '0.0.1'
 }
 
 repositories {

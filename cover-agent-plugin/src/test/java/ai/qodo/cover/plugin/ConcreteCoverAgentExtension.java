@@ -1,4 +1,4 @@
-package ai.codium.cover.plugin;
+package ai.qodo.cover.plugin;
 
 import org.gradle.api.Project;
 

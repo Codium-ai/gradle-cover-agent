@@ -22,7 +22,7 @@ To include the plugin in your Gradle project, add the following to your `build.g
 
 ```groovy
 plugins {
-    id 'ai.codium.cover.plugin' version '0.0.1'
+    id 'ai.qodo.cover.plugin' version '0.0.1'
 }
 ```
 

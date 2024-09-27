@@ -1,4 +1,4 @@
-package ai.codium.test;
+package ai.qodo.test;
 public class Calc {
     public static void main(String[] args) {
         int one = Integer.parseInt(args[0]);

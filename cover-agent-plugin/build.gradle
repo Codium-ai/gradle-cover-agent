@@ -12,7 +12,7 @@ plugins {
     id 'com.gradleup.shadow' version '8.3.2'
 }
 
-group = 'ai.codium'
+group = 'ai.qodo'
 version = '0.0.1'
 
 repositories {
@@ -47,10 +47,10 @@ gradlePlugin {
         website = 'https://github.com/Codium-ai/gradle-cover-agent'
         vcsUrl = 'https://github.com/Codium-ai/gradle-cover-agent.git'
         coverAgent {
-            id = 'ai.codium.plugin.cover-agent'
-            implementationClass = 'ai.codium.cover.plugin.CoverAgentPlugin'
+            id = 'ai.qodo.plugin.cover-agent'
+            implementationClass = 'ai.qodo.cover.plugin.CoverAgentPlugin'
             displayName = 'Cover Agent Plugin'
-            description = 'A plugin to cover agent functionality.'
+            description = 'A plugin to use Cover Agent in Gradle.'
             tags = ['cover-agent', 'code-quality', 'unit-testing']
 
         }
@@ -114,8 +114,8 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             excludes = [
-                    'ai.codium.cover.plugin.CoverAgentPlugin',
-                    'ai.codium.cover.plugin.CoverAgentTask',
+                    'ai.qodo.cover.plugin.CoverAgentPlugin',
+                    'ai.qodo.cover.plugin.CoverAgentTask',
                     'sun.util.resources.cldr.provider.CLDRLocaleDataMetaInfo'
             ]
             element = 'CLASS'

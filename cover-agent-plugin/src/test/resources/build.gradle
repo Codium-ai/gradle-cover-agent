@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'ai.codium.plugin.cover-agent'
+    id 'ai.qodo.plugin.cover-agent'
 }
 
 group = 'com.davidparry'

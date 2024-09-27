@@ -1,4 +1,4 @@
-package ai.codium.cover.plugin
+package ai.qodo.cover.plugin
 
 
 import org.gradle.testkit.runner.GradleRunner
@@ -41,7 +41,7 @@ class CoverAgentPluginSpec extends Specification {
         thava = new File(test, 'java')
         thava.mkdirs()
 
-        String packagePath = 'ai/codium/test'
+        String packagePath = 'ai/qodo/test'
         File sourcePackage = new File(hava, packagePath)
         sourcePackage.mkdirs()
         File testPackage = new File(thava, packagePath)

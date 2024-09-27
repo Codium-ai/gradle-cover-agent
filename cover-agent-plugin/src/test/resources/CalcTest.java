@@ -1,4 +1,4 @@
-package ai.codium.test;
+package ai.qodo.test;
 
 import org.junit.jupiter.api.Test;
 

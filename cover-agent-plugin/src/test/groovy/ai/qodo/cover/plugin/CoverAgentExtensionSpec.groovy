@@ -1,4 +1,4 @@
-package ai.codium.cover.plugin
+package ai.qodo.cover.plugin
 import org.gradle.api.provider.Property;
 import org.gradle.api.Project
 import org.gradle.api.model.ObjectFactory
@@ -7,7 +7,7 @@ import spock.lang.Specification
 class CoverAgentExtensionSpec extends Specification {
     void setup() {
     }
-    // Initializes ai.codium.cover.plugin.ConcreteCoverAgentExtension with a valid Project object
+    // Initializes ai.qodo.cover.plugin.ConcreteCoverAgentExtension with a valid Project object
     def "should initialize with valid Project object"() {
         given:
         Project project = Mock(Project)

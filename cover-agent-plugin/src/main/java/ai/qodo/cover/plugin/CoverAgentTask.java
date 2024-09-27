@@ -1,4 +1,4 @@
-package ai.codium.cover.plugin;
+package ai.qodo.cover.plugin;
 
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import org.gradle.api.DefaultTask;

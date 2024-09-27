@@ -17,19 +17,6 @@ checkstyleTest {
 }
 
 
-//spotbugsMain {
-//    ignoreFailures = false
-//    classes = fileTree(dir: 'build/classes/java/main', excludes: [
-//            '**/cover/CoverAgentPlugin.java',
-//            '**/cover/CoverAgentTask.java'
-//    ])
-//    dependsOn compileJava
-//}
-//
-//spotbugsTest {
-//    ignoreFailures = true
-//}
-
 pmdMain {
     ignoreFailures = false
     ruleSets = []
@@ -50,16 +37,16 @@ jacoco {
 jacocoTestReport {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: ['ai/codium/cover/plugin/CoverAgentPlugin',
-                                        'ai/codium/cover/plugin/CoverAgentTask',
-                                        'ai/codium/cover/plugin/CoverAgent',
-                                        'ai/codium/cover/plugin/CoverAgentBuilder',
-                                        'ai/codium/cover/plugin/CoverAgentExtension',
-                                        'ai/codium/cover/plugin/CoverError',
-                                        'ai/codium/cover/plugin/ModelPrompter',
-                                        'ai/codium/cover/plugin/SourceFilePrompt',
-                                        'ai/codium/cover/plugin/TestInfoResponse',
-                                        'ai/codium/cover/plugin/CoverAgentExecutor'])
+            fileTree(dir: it, exclude: ['ai/qodo/cover/plugin/CoverAgentPlugin',
+                                        'ai/qodo/cover/plugin/CoverAgentTask',
+                                        'ai/qodo/cover/plugin/CoverAgent',
+                                        'ai/qodo/cover/plugin/CoverAgentBuilder',
+                                        'ai/qodo/cover/plugin/CoverAgentExtension',
+                                        'ai/qodo/cover/plugin/CoverError',
+                                        'ai/qodo/cover/plugin/ModelPrompter',
+                                        'ai/qodo/cover/plugin/SourceFilePrompt',
+                                        'ai/qodo/cover/plugin/TestInfoResponse',
+                                        'ai/qodo/cover/plugin/CoverAgentExecutor'])
         }))
     }
     reports {
@@ -73,17 +60,17 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             excludes = [
-                    'ai.codium.cover.plugin.CoverAgentPlugin',
-                    'ai.codium.cover.plugin.CoverAgentTask',
+                    'ai.qodo.cover.plugin.CoverAgentPlugin',
+                    'ai.qodo.cover.plugin.CoverAgentTask',
                     'sun.util.resources.cldr.provider.CLDRLocaleDataMetaInfo',
-                    'ai.codium.cover.plugin.CoverAgent',
-                    'ai.codium.cover.plugin.CoverAgentBuilder',
-                    'ai.codium.cover.plugin.CoverAgentExtension',
-                    'ai.codium.cover.plugin.CoverError',
-                    'ai.codium.cover.plugin.ModelPrompter',
-                    'ai.codium.cover.plugin.SourceFilePrompt',
-                    'ai.codium.cover.plugin.TestInfoResponse',
-                    'ai.codium.cover.plugin.CoverAgentExecutor'
+                    'ai.qodo.cover.plugin.CoverAgent',
+                    'ai.qodo.cover.plugin.CoverAgentBuilder',
+                    'ai.qodo.cover.plugin.CoverAgentExtension',
+                    'ai.qodo.cover.plugin.CoverError',
+                    'ai.qodo.cover.plugin.ModelPrompter',
+                    'ai.qodo.cover.plugin.SourceFilePrompt',
+                    'ai.qodo.cover.plugin.TestInfoResponse',
+                    'ai.qodo.cover.plugin.CoverAgentExecutor'
 
             ]
             element = 'CLASS'
