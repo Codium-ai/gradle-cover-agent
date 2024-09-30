@@ -50,8 +50,8 @@ gradlePlugin {
             id = 'ai.qodo.plugin.cover-agent'
             implementationClass = 'ai.qodo.cover.plugin.CoverAgentPlugin'
             displayName = 'Cover Agent Plugin'
-            description = 'A plugin to use Cover Agent in Gradle.'
-            tags = ['cover-agent', 'code-quality', 'unit-testing']
+            description = 'A plugin to use Cover Agent in Gradle. https://github.com/Codium-ai/cover-agent?tab=readme-ov-file#installation-and-usage'
+            tags.addAll('cover-agent', 'code-quality', 'unit-testing')
 
         }
     }

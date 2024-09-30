@@ -5,6 +5,7 @@ import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.Property;
 
 public abstract class CoverAgentExtension {
+
     private final Property<String> apiKey;
     private final Property<String> wanDBApiKey;
     private final Property<Integer> iterations;

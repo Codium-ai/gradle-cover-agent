@@ -33,30 +33,51 @@ public abstract class CoverAgentTask extends DefaultTask {
     }
 
 
+    /**
+     * This is your API key for OpenAI to access their api.
+     * @return String api key for OpenAI to use in calling the LLM.
+     */
     @Optional
     @Input
     public Property<String> getApiKey() {
         return apiKey;
     }
 
+    /**
+     * Not currently implemented, placeholder for future support.
+     * @return
+     */
     @Optional
     @Input
     public Property<String> getWanDBApiKey() {
         return wanDBApiKey;
     }
 
+    /**
+     * This is the path to the CoverAgent binary specific to your OS
+     *
+     * @return path to the binary example (/Users/davidparry/code/github/base/cover-agent/dist/cover-agent)
+     */
     @Optional
     @Input
     public Property<String> getCoverAgentBinaryPath() {
         return coverAgentBinaryPath;
     }
 
+    /**
+     * This is how many calls to allow using your API keyAI to OpenAI per Test/Source files found.
+     * @return number of times to call the LLM
+     */
     @Optional
     @Input
     public Property<Integer> getIterations() {
         return iterations;
     }
 
+    /**
+     * The target code coverage you want to obtain
+     * @return whole number for percentage example 25 for 25% coverage
+     */
     @Optional
     @Input
     public Property<Integer> getCoverage() {
