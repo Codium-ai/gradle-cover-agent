@@ -54,7 +54,7 @@ public abstract class CoverAgentTask extends DefaultTask {
     }
 
     /**
-     * This is the path to the CoverAgent binary specific to your OS
+     * This is the path to the CoverAgent binary specific to your OS.
      *
      * @return path to the binary example (/Users/davidparry/code/github/base/cover-agent/dist/cover-agent)
      */
@@ -75,7 +75,7 @@ public abstract class CoverAgentTask extends DefaultTask {
     }
 
     /**
-     * The target code coverage you want to obtain
+     * The target code coverage you want to obtain.
      * @return whole number for percentage example 25 for 25% coverage
      */
     @Optional
